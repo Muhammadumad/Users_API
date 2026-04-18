@@ -35,13 +35,13 @@ Basic REST API for user CRUD operations using Django REST Framework with in-memo
 
 ## Endpoints
 
-| Method | Endpoint | Description | Success | Common Errors |
-|---|---|---|---|---|
-| `POST` | `/api/users/` | Create user | `201` | `400` invalid/missing/duplicate data |
-| `GET` | `/api/users/` | List users | `200` | - |
-| `GET` | `/api/users/<uuid:user_id>/` | Get user by id | `200` | `404` user not found |
-| `PUT` | `/api/users/<uuid:user_id>/` | Update user (partial supported) | `200` | `400`, `404` |
-| `DELETE` | `/api/users/<uuid:user_id>/` | Delete user | `204` | `404` user not found |
+| Method   | Endpoint                     | Description                     | Success | Common Errors                        |
+| -------- | ---------------------------- | ------------------------------- | ------- | ------------------------------------ |
+| `POST`   | `/api/users/`                | Create user                     | `201`   | `400` invalid/missing/duplicate data |
+| `GET`    | `/api/users/`                | List users                      | `200`   | -                                    |
+| `GET`    | `/api/users/<uuid:user_id>/` | Get user by id                  | `200`   | `404` user not found                 |
+| `PUT`    | `/api/users/<uuid:user_id>/` | Update user (partial supported) | `200`   | `400`, `404`                         |
+| `DELETE` | `/api/users/<uuid:user_id>/` | Delete user                     | `204`   | `404` user not found                 |
 
 ## Sample Request and Response
 
