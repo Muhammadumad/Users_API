@@ -1,16 +1,27 @@
-# Task-01: Basic REST API with CRUD Operations
+# Users API (Task-01)
 
-This project implements a basic REST API for a users resource using Django REST Framework.
+![Python](https://img.shields.io/badge/Python-3.x-blue)
+![Django](https://img.shields.io/badge/Django-DRF-green)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 
-## Assignment Coverage
+Basic REST API for user CRUD operations using Django REST Framework with in-memory storage.
 
-The API satisfies the Task-01 requirements:
+## Features
+
+- Create, read, update, and delete users
+- UUID-based user IDs
+- In-memory hashmap-style storage (Python dictionary)
+- Validation for email and age
+- Proper HTTP status codes and error handling
+- Postman collection + testing guide included
+
+## Assignment Checklist
 
 - CRUD endpoints for users
-- User fields: `id` (UUID), `name`, `email`, `age`
-- In-memory storage using a hashmap-style Python dictionary
-- Proper status codes and error handling (`200`, `201`, `204`, `400`, `404`)
-- Basic input validation (including valid email format)
+- User fields: `id`, `name`, `email`, `age`
+- In-memory store (no DB persistence for users CRUD flow)
+- `400` and `404` handling
+- Email format validation
 
 ## Tech Stack
 
@@ -18,27 +29,23 @@ The API satisfies the Task-01 requirements:
 - Django
 - Django REST Framework
 
-## Project Structure
-
-- `users/views.py`: CRUD endpoint logic
-- `users/serializers.py`: input validation and UUID generation
-- `users/store.py`: in-memory `USERS` dictionary and email helpers
-- `users/urls.py`: users API routes
-- `core/urls.py`: root and API routing
-- `users/tests.py`: API test cases
-- `Users_API_Postman_Collection.json`: ready Postman collection
-
 ## API Base URL
 
 `http://localhost:8000`
 
 ## Endpoints
 
-### 1) Create User
+| Method | Endpoint | Description | Success | Common Errors |
+|---|---|---|---|---|
+| `POST` | `/api/users/` | Create user | `201` | `400` invalid/missing/duplicate data |
+| `GET` | `/api/users/` | List users | `200` | - |
+| `GET` | `/api/users/<uuid:user_id>/` | Get user by id | `200` | `404` user not found |
+| `PUT` | `/api/users/<uuid:user_id>/` | Update user (partial supported) | `200` | `400`, `404` |
+| `DELETE` | `/api/users/<uuid:user_id>/` | Delete user | `204` | `404` user not found |
 
-- Method: `POST`
-- URL: `/api/users/`
-- Request body:
+## Sample Request and Response
+
+### Create User
 
 ```json
 {
@@ -47,8 +54,6 @@ The API satisfies the Task-01 requirements:
   "age": 28
 }
 ```
-
-- Success response: `201 Created`
 
 ```json
 {
@@ -59,85 +64,37 @@ The API satisfies the Task-01 requirements:
 }
 ```
 
-### 2) Get All Users
-
-- Method: `GET`
-- URL: `/api/users/`
-- Success response: `200 OK`
-
-### 3) Get User By ID
-
-- Method: `GET`
-- URL: `/api/users/<uuid:user_id>/`
-- Success response: `200 OK`
-- Not found response: `404 Not Found`
-
-### 4) Update User
-
-- Method: `PUT`
-- URL: `/api/users/<uuid:user_id>/`
-- Request body (partial updates supported):
-
-```json
-{
-  "name": "John Updated",
-  "age": 29
-}
-```
-
-- Success response: `200 OK`
-- Invalid payload response: `400 Bad Request`
-- Not found response: `404 Not Found`
-
-### 5) Delete User
-
-- Method: `DELETE`
-- URL: `/api/users/<uuid:user_id>/`
-- Success response: `204 No Content`
-- Not found response: `404 Not Found`
-
 ## Validation Rules
 
-- `name`: required, max 100 characters
-- `email`: required, must be valid email format
+- `name`: required, max 100 chars
+- `email`: required, valid email format
 - `age`: required, integer, minimum `0`
-- Duplicate email is rejected with `400 Bad Request`
+- duplicate email rejected
 
-## Error Handling
+## Important Note: In-Memory Storage
 
-- `400 Bad Request`
-  - invalid email
-  - missing required fields
-  - duplicate email
-  - empty update body
-- `404 Not Found`
-  - user UUID does not exist
+Users are stored in `users/store.py` in the `USERS` dictionary.
 
-## In-Memory Storage Note
+When the server restarts, stored users are cleared. This is expected for this assignment.
 
-User data is stored in-memory in `users/store.py` (`USERS` dictionary).
+## Quick Start
 
-This means all users are cleared when the Django server restarts.
-
-## Local Setup and Run
-
-1. Create and activate virtual environment (if not already active)
-2. Install dependencies:
+1. Install dependencies:
 
 ```powershell
 pip install -r requirements.txt
 ```
 
-3. Run server:
+2. Run server:
 
 ```powershell
 python manage.py runserver
 ```
 
-4. Open:
+3. Open:
 
-- API root: `http://localhost:8000/`
-- Users list/create: `http://localhost:8000/api/users/`
+- `http://localhost:8000/`
+- `http://localhost:8000/api/users/`
 
 ## Run Tests
 
@@ -145,23 +102,17 @@ python manage.py runserver
 python manage.py test users
 ```
 
-## Postman Testing
+## Postman
 
-Use the included collection:
+- Collection: `Users_API_Postman_Collection.json`
+- Environment variables:
+  - `base_url = http://localhost:8000`
+  - `user_id =` (auto-set after create)
+- Guides:
+  - `POSTMAN_TESTING_GUIDE.md`
+  - `POSTMAN_SOLUTIONS.md`
 
-- `Users_API_Postman_Collection.json`
-
-Environment variables:
-
-- `base_url = http://localhost:8000`
-- `user_id = ` (auto-set after Create User)
-
-Supporting docs:
-
-- `POSTMAN_TESTING_GUIDE.md`
-- `POSTMAN_SOLUTIONS.md`
-
-## Sample cURL
+## cURL Examples
 
 Create user:
 
@@ -171,8 +122,12 @@ curl -X POST http://localhost:8000/api/users/ \
   -d '{"name":"John Doe","email":"john@example.com","age":28}'
 ```
 
-Get user by id:
+Get user by ID:
 
 ```bash
 curl http://localhost:8000/api/users/<USER_UUID>/
 ```
+
+## License
+
+This project is licensed under the MIT License. See `LICENSE`.
