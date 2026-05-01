@@ -84,11 +84,19 @@ REST API for user CRUD operations using Django REST Framework with persistent da
 - `age`: required, integer, minimum `0`
 - duplicate email rejected
 
-## Important Note: In-Memory Storage
+## How the project works
 
-Users are stored in `users/store.py` in the `USERS` dictionary.
+This project is a small REST API built with Django and Django REST Framework to manage a `User` resource.
 
-When the server restarts, stored users are cleared. This is expected for this assignment.
+- Data model: `users.models.User` (fields: `id` UUID, `name`, `email` unique, `age`, `created_at`, `updated_at`).
+- Storage: By default the project uses SQLite for local development. You can switch to MySQL by setting `DATABASE_HOST` and other database variables in `.env`.
+- API layer: `users.views` exposes CRUD endpoints. Input/response validation is handled by DRF serializers (`users.serializers.UserSerializer`).
+- Schema management: Django migrations are used to create and evolve the database schema.
+
+Persistence behavior:
+
+- In development (no `DATABASE_HOST` set) the project uses `db.sqlite3` (file). Data persists across server restarts.
+- In production, configure MySQL via `.env` to persist data in a server-grade DB with connection pooling.
 
 ## Quick Start (SQLite - Development)
 
@@ -135,6 +143,33 @@ Then run migrations:
 ```powershell
 python manage.py migrate
 ```
+
+## Developer notes / architecture summary
+
+- `users/models.py` — Django ORM model representing users. Use `python manage.py makemigrations` and `python manage.py migrate` to update schema.
+- `users/serializers.py` — DRF `ModelSerializer` mapping model fields to JSON and handling validation.
+- `users/views.py` — Function-based API views for `user_list` and `user_detail` using ORM queries.
+- `users/tests.py` — API test suite (7 tests) that runs against the configured database (uses test DB).
+- `DATABASE_SETUP.md` — Step-by-step guide for switching to MySQL and production considerations.
+
+## Recommended commands
+
+Activate venv and install deps:
+
+```powershell
+venv\\Scripts\\Activate.ps1
+pip install -r requirements.txt
+```
+
+Run migrations, tests, and start server:
+
+```powershell
+python manage.py migrate
+python manage.py test users
+python manage.py runserver
+```
+
+If you plan to use MySQL in production, ensure MySQL server is running and `.env` contains correct credentials before running `migrate`.
 
 ## Run Tests
 
