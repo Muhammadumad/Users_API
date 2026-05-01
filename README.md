@@ -1,33 +1,46 @@
-# Users API (Task-01)
+# Users API (Task-01 & Task-02)
 
 ![Python](https://img.shields.io/badge/Python-3.x-blue)
 ![Django](https://img.shields.io/badge/Django-DRF-green)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
-Basic REST API for user CRUD operations using Django REST Framework with in-memory storage.
+REST API for user CRUD operations using Django REST Framework with persistent database storage (SQLite/MySQL).
 
 ## Features
 
-- Create, read, update, and delete users
-- UUID-based user IDs
-- In-memory hashmap-style storage (Python dictionary)
-- Validation for email and age
-- Proper HTTP status codes and error handling
-- Postman collection + testing guide included
+- **Create, read, update, and delete users** with persistent storage
+- **UUID-based user IDs** for unique identification
+- **Persistent Database Storage** - SQLite (development) or MySQL (production)
+- **Database Migrations** with Django ORM for schema versioning
+- **Connection Pooling** for optimized database connections
+- **Environment-based Configuration** using `.env` files
+- **Validation** for email format and age constraints
+- **Proper HTTP status codes** and error handling
+- **Comprehensive test suite** with 7 passing tests
+- **Postman collection** + testing guides included
 
-## Assignment Checklist
+## Task-02 Requirements Checklist
 
-- CRUD endpoints for users
-- User fields: `id`, `name`, `email`, `age`
-- In-memory store (no DB persistence for users CRUD flow)
-- `400` and `404` handling
-- Email format validation
+- ✅ CRUD endpoints for users with persistent database storage
+- ✅ User fields: `id`, `name`, `email`, `age`, `created_at`, `updated_at`
+- ✅ **Database Integration**: SQLite (dev) + MySQL (production)
+- ✅ **ORM Integration**: Django ORM for model management
+- ✅ **Database Migrations**: Schema versioning with Django migrations
+- ✅ **Connection Pooling**: Connection timeout configuration
+- ✅ **Environment Configuration**: `.env` file support with `python-dotenv`
+- ✅ **Environment Variables**: Database credentials via `.env`
+- ✅ `400` and `404` error handling with validation
+- ✅ Email uniqueness enforced at database level
 
 ## Tech Stack
 
-- Python
-- Django
-- Django REST Framework
+- **Python 3.14+**
+- **Django 6.0.4**
+- **Django REST Framework 3.17.1**
+- **SQLite** (development default)
+- **MySQL** (production-ready with mysqlclient)
+- **mysqlclient 2.2.8** (MySQL adapter)
+- **python-dotenv 1.0.0** (environment configuration)
 
 ## API Base URL
 
@@ -77,7 +90,7 @@ Users are stored in `users/store.py` in the `USERS` dictionary.
 
 When the server restarts, stored users are cleared. This is expected for this assignment.
 
-## Quick Start
+## Quick Start (SQLite - Development)
 
 1. Install dependencies:
 
@@ -85,16 +98,43 @@ When the server restarts, stored users are cleared. This is expected for this as
 pip install -r requirements.txt
 ```
 
-2. Run server:
+2. Apply database migrations:
+
+```powershell
+python manage.py migrate
+```
+
+3. Run server:
 
 ```powershell
 python manage.py runserver
 ```
 
-3. Open:
+4. Open:
 
 - `http://localhost:8000/`
 - `http://localhost:8000/api/users/`
+
+## Database Setup
+
+For production MySQL setup and detailed configuration, see [DATABASE_SETUP.md](DATABASE_SETUP.md).
+
+### Switch to MySQL
+
+Edit `.env`:
+
+```env
+DATABASE_HOST=localhost
+DATABASE_NAME=users_api_db
+DATABASE_USER=api_user
+DATABASE_PASSWORD=your_password
+```
+
+Then run migrations:
+
+```powershell
+python manage.py migrate
+```
 
 ## Run Tests
 
